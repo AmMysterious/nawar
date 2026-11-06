@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dr. Nawar | Doctor who builds software</title>
+<meta name="description" content="Dr. Nawar - medical graduate from Nicolae Testemițanu University and founder of Ciel Study, an exam-prep platform for FMGE, NEET-PG and INI-CET.">
+<meta property="og:title" content="Dr. Nawar | Doctor who builds software">
+<meta property="og:description" content="Medicine + technology. Founder of Ciel Study: 8,100+ checked exam questions, built and run solo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05060a; --fg:#e9ebf2; --mute:#8b91a5; --line:rgba(255,255,255,.09);
+    --cyan:#7cf3ff; --pink:#ff6b8b; --panel:rgba(7,9,15,.62);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg);font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  #swarm{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0}
+  .vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.65) 100%)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px 5vw}
+  .logo{font-weight:700;letter-spacing:.04em;text-decoration:none;font-size:18px}
+  .logo span{color:var(--cyan)}
+  .links{display:flex;gap:26px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .links a{text-decoration:none;color:var(--mute);transition:color .25s}
+  .links a:hover,.links a.on{color:var(--fg)}
+
+  section{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:120px 6vw}
+  .panel{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:40px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:18px}
+  h2{font-size:clamp(28px,3.4vw,42px);line-height:1.12;font-weight:700;letter-spacing:-.01em;margin-bottom:18px}
+  p{color:#c3c7d4;font-size:16.5px}
+  p+p{margin-top:14px}
+  strong{color:var(--fg);font-weight:500}
+
+  /* hero */
+  #hero{align-items:flex-end;justify-content:center;text-align:center;padding-bottom:13vh}
+  .hero-inner{max-width:720px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+  .tagline{font-size:clamp(22px,2.6vw,32px);font-weight:300;margin:14px 0 30px;color:var(--fg)}
+  .tagline em{font-style:normal;color:var(--cyan)}
+  .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;border:1px solid var(--line);
+    text-decoration:none;font-size:14px;font-weight:500;transition:all .25s;background:rgba(255,255,255,.03)}
+  .btn:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.solid{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+  .btn.solid:hover{background:var(--cyan);border-color:var(--cyan);color:var(--bg)}
+  .hint{margin-top:44px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase}
+  .hint i{display:block;width:1px;height:38px;margin:10px auto 0;background:linear-gradient(var(--mute),transparent);animation:drip 2s infinite}
+  @keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:26px 0}
+  .stat{background:rgba(5,6,10,.85);padding:18px 20px}
+  .stat b{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em}
+  .stat span{font-size:12.5px;color:var(--mute)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{font-size:12.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:#c3c7d4}
+  .more{display:inline-block;margin-top:22px;color:var(--cyan);text-decoration:none;font-weight:500}
+  .more:hover{text-decoration:underline}
+  .aside{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:14.5px}
+
+  /* timeline */
+  .tl{list-style:none;margin-top:8px;position:relative}
+  .tl:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl li{position:relative;padding:0 0 20px 28px}
+  .tl li:before{content:"";position:absolute;left:0;top:7px;width:11px;height:11px;border-radius:50%;border:1px solid var(--cyan);background:var(--bg)}
+  .tl li.med:before{border-color:var(--pink)}
+  .tl time{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--mute);letter-spacing:.06em}
+  .tl h3{font-size:16px;font-weight:500;line-height:1.35}
+  .tl p{font-size:14px;color:var(--mute)}
+
+  /* toolkit */
+  .group{margin-top:20px}
+  .group h3{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:400;margin-bottom:8px}
+  .group.med .chip{border-color:rgba(255,107,139,.35)}
+
+  /* contact */
+  .contact-links{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+  .contact-links a{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border:1px solid var(--line);border-radius:14px;text-decoration:none;transition:all .25s}
+  .contact-links a:hover{border-color:var(--cyan);transform:translateX(4px)}
+  .contact-links small{color:var(--mute);font-family:'JetBrains Mono',monospace;font-size:12px}
+  footer{position:relative;z-index:1;text-align:center;padding:40px 0 50px;color:var(--mute);font-size:12.5px;font-family:'JetBrains Mono',monospace}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:800px){
+    .links{display:none}
+    section:not(#hero){align-items:flex-end;padding:42vh 5vw 70px}
+    .panel{padding:28px 22px}
+    #hero{padding-bottom:10vh}
+  }
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.hint i{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="swarm" aria-hidden="true"></canvas>
+<div class="vignette"></div>
+
+<nav>
+  <a class="logo" href="#hero">N<span>.</span></a>
+  <div class="links">
+    <a href="#medicine">Medicine</a>
+    <a href="#build">Building</a>
+    <a href="#path">Path</a>
+    <a href="#toolkit">Toolkit</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<main>
+<section id="hero" data-shape="text:NAWAR">
+  <div class="hero-inner">
+    <h1 class="sr">Dr. Nawar</h1>
+    <div class="eyebrow reveal">Doctor &middot; Builder &middot; Kozhikode, India</div>
+    <div class="tagline reveal">A medical doctor who <em>builds software</em>.</div>
+    <div class="btns reveal">
+      <a class="btn solid" href="#build">See what I built</a>
+      <a class="btn" href="https://www.linkedin.com/in/dr-nawar-%E2%80%8C-2153671ab/" target="_blank" rel="noopener">LinkedIn &nearr;</a>
+    </div>
+    <div class="hint reveal">Move, click, scroll<i></i></div>
+  </div>
+</section>
+
+<section id="medicine" data-shape="ecg">
+  <div class="panel reveal">
+    <div class="kicker">01 / Medicine</div>
+    <h2>Trained in medicine across two countries.</h2>
+    <p><strong>Medical Doctor (MD)</strong>, equivalent to MBBS in India, from <strong>Nicolae Testemițanu State University of Medicine and Pharmacy</strong>, Chișinău, Moldova (2019&ndash;2025). It's a 6-year integrated Bachelor's + Master's programme (360 ECTS) taught in English.</p>
+    <p>Graduate thesis: <strong>&ldquo;Gene Editing in Genetic Kidney Diseases&rdquo;</strong>, a review of CRISPR-Cas9, TALENs and zinc-finger nucleases for inherited kidney disease, written in the Department of Rheumatology and Nephrology.</p>
+    <p>Summer surgical internships at <strong>Timofei Moșneaga Republican Clinical Hospital</strong> (2023, 2024), and a clinical observership at <strong>Starcare Hospital</strong>, Kozhikode (2022).</p>
+    <p>Sat the <strong>FMGE</strong> in October 2026 to practise in India.</p>
+  </div>
+</section>
+
+<section id="build" data-shape="text:</>">
+  <div class="panel reveal">
+    <div class="kicker">02 / Building</div>
+    <h2>Ciel Study: an exam-prep platform I built alone.</h2>
+    <p>A Telegram question bank for <strong>FMGE, NEET-PG and INI-CET</strong>. I designed it, built it and run it end to end, because I wanted a revision tool whose answer keys I could actually trust.</p>
+    <div class="stats">
+      <div class="stat"><b data-count="8100" data-suffix="+">0</b><span>checked questions</span></div>
+      <div class="stat"><b data-count="1700" data-suffix="+">0</b><span>image-based questions</span></div>
+      <div class="stat"><b data-count="440" data-suffix="+">0</b><span>users</span></div>
+      <div class="stat"><b data-count="19">0</b><span>subjects</span></div>
+    </div>
+    <div class="chips">
+      <span class="chip">Written explanations</span><span class="chip">Spaced repetition</span><span class="chip">Timed exams</span>
+      <span class="chip">Topic practice</span><span class="chip">Online payments</span><span class="chip">Public bug changelog</span>
+    </div>
+    <a class="more" href="https://ammysterious.github.io/ciel_study/" target="_blank" rel="noopener">Visit Ciel Study &rarr;</a>
+    <p class="aside">Also building: a <strong>personal AI assistant</strong> for myself and my family, running on my own machine.</p>
+  </div>
+</section>
+
+<section id="path" data-shape="helix">
+  <div class="panel reveal">
+    <div class="kicker">03 / Path</div>
+    <h2>How I got here.</h2>
+    <ul class="tl">
+      <li><time>2026 &mdash; now</time><h3>Founder &amp; Developer, Ciel Study</h3><p>Exam-prep platform for Indian medical entrance exams</p></li>
+      <li class="med"><time>2019 &mdash; 2025</time><h3>MD (≈ MBBS), Nicolae Testemițanu University</h3><p>Chișinău, Moldova &middot; thesis on gene editing in genetic kidney diseases</p></li>
+      <li class="med"><time>2023 &amp; 2024</time><h3>Surgical internships, Timofei Moșneaga Republican Clinical Hospital</h3><p>Summer internships, Chișinău</p></li>
+      <li><time>2023 &mdash; 2025</time><h3>Inbound Dispatcher, The North Transportation LLC</h3><p>Remote: US&ndash;Canada freight, alongside medical school</p></li>
+      <li class="med"><time>2022</time><h3>Clinical observership, Starcare Hospital</h3><p>Kozhikode, Kerala</p></li>
+      <li><time>2020 &mdash; 2025</time><h3>Freelance interpreter</h3><p>English / Hindi &rarr; Romanian</p></li>
+      <li><time>2012 &mdash; 2019</time><h3>Freelance computer technical specialist</h3><p>Kozhikode, Kerala</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="toolkit" data-shape="globe">
+  <div class="panel reveal">
+    <div class="kicker">04 / Toolkit</div>
+    <h2>Two sides, one person.</h2>
+    <div class="group med"><h3>Clinical</h3><div class="chips">
+      <span class="chip">Emergency medicine</span><span class="chip">Surgical assisting</span><span class="chip">Literature review &amp; research writing</span><span class="chip">Gene editing (CRISPR)</span>
+      <span class="chip">Patient communication</span><span class="chip">Medical terminology</span></div></div>
+    <div class="group"><h3>Building</h3><div class="chips">
+      <span class="chip">Telegram bots</span><span class="chip">Databases (SQLite)</span><span class="chip">Payment integration</span>
+      <span class="chip">AI tools &amp; prompt design</span><span class="chip">Product management</span><span class="chip">Technical writing</span></div></div>
+    <div class="group"><h3>Languages</h3><div class="chips">
+      <span class="chip">English</span><span class="chip">Malayalam</span><span class="chip">Hindi</span><span class="chip">Romanian</span></div></div>
+  </div>
+</section>
+
+<section id="contact" data-shape="text:HELLO">
+  <div class="panel reveal">
+    <div class="kicker">05 / Contact</div>
+    <h2>Let&rsquo;s build something useful for medicine.</h2>
+    <p>Open to clinical roles, health-tech work and collaborations.</p>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/dr-nawar-%E2%80%8C-2153671ab/" target="_blank" rel="noopener"><span>LinkedIn</span><small>message me &nearr;</small></a>
+      <a href="https://ammysterious.github.io/ciel_study/" target="_blank" rel="noopener"><span>Ciel Study</span><small>ammysterious.github.io &nearr;</small></a>
+    </div>
+  </div>
+</section>
+</main>
+<footer>&copy; 2026 Dr. Nawar &middot; made with ~3,000 particles</footer>
+
+<script>
+(() => {
+  const cvs = document.getElementById('swarm'), ctx = cvs.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0, DPR = 1, N = 0, t = 0;
+  let px, py, vx, vy, tx, ty, has, col;
+  const mouse = { x: -1e5, y: -1e5 };
+  let shape = 'text:NAWAR';
+
+  function alloc() {
+    N = W < 700 ? 1500 : (W < 1200 ? 2600 : 3400);
+    px = new Float32Array(N); py = new Float32Array(N); vx = new Float32Array(N); vy = new Float32Array(N);
+    tx = new Float32Array(N); ty = new Float32Array(N); has = new Uint8Array(N); col = new Uint8Array(N);
+    for (let i = 0; i < N; i++) {
+      px[i] = Math.random() * W; py[i] = Math.random() * H;
+      col[i] = Math.random() < 0.16 ? 1 : 0;
+    }
+  }
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cvs.width = W * DPR; cvs.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    if (!px) alloc();
+    ctx.fillStyle = '#05060a'; ctx.fillRect(0, 0, W, H);
+    applyShape(shape, false);
+  }
+
+  // where the shape lives on screen
+  function region(spec) {
+    const mobile = W < 800;
+    if (spec === 'text:NAWAR') return mobile ? { x: W * .06, y: H * .14, w: W * .88, h: H * .34 } : { x: W * .08, y: H * .12, w: W * .84, h: H * .46 };
+    return mobile ? { x: W * .1, y: H * .08, w: W * .8, h: H * .3 } : { x: W * .5, y: H * .14, w: W * .44, h: H * .72 };
+  }
+
+  function draw(o, spec, w, h) {
+    o.fillStyle = '#fff'; o.strokeStyle = '#fff'; o.lineJoin = 'round'; o.lineCap = 'round';
+    const lw = Math.max(5, Math.min(w, h) * 0.035);
+    if (spec.startsWith('text:')) {
+      const s = spec.slice(5);
+      o.font = '700 100px "Space Grotesk", sans-serif';
+      const m = o.measureText(s).width;
+      const fs = Math.min(h * 0.8, 100 * (w * 0.96) / m);
+      o.font = `700 ${fs}px "Space Grotesk", sans-serif`;
+      o.textAlign = 'center'; o.textBaseline = 'middle';
+      o.fillText(s, w / 2, h / 2);
+    } else if (spec === 'ecg') {
+      o.lineWidth = lw;
+      const cx = w / 2, cy = h * 0.4, s = Math.min(w, h) * 0.34;
+      o.beginPath();
+      o.moveTo(cx, cy + s * 0.55);
+      o.bezierCurveTo(cx - s * 1.15, cy - s * 0.1, cx - s * 0.55, cy - s * 0.95, cx, cy - s * 0.38);
+      o.bezierCurveTo(cx + s * 0.55, cy - s * 0.95, cx + s * 1.15, cy - s * 0.1, cx, cy + s * 0.55);
+      o.stroke();
+      const y0 = h * 0.82, pts = [[0,0],[.28,0],[.33,-.04],[.38,0],[.44,0],[.47,.05],[.51,-.2],[.55,.08],[.59,0],[.68,0],[.74,-.06],[.8,0],[1,0]];
+      o.beginPath();
+      pts.forEach(([a, b], k) => k ? o.lineTo(a * w, y0 + b * h) : o.moveTo(a * w, y0 + b * h));
+      o.stroke();
+    } else if (spec === 'globe') {
+      o.lineWidth = lw * 0.8;
+      const cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.42;
+      o.beginPath(); o.arc(cx, cy, R, 0, Math.PI * 2); o.stroke();
+      [0.35, 0.72].forEach(k => { o.beginPath(); o.ellipse(cx, cy, R * k, R, 0, 0, Math.PI * 2); o.stroke(); });
+      [-0.5, 0, 0.5].forEach(k => { const hc = R * Math.sqrt(1 - k * k); o.beginPath(); o.moveTo(cx - hc, cy + k * R); o.lineTo(cx + hc, cy + k * R); o.stroke(); });
+    } else if (spec === 'helix') {
+      o.lineWidth = lw * 0.7;
+      const cx = w / 2, A = Math.min(w * 0.22, h * 0.16), top = h * 0.06, bot = h * 0.94, turns = 2.2;
+      for (const ph of [0, Math.PI]) {
+        o.beginPath();
+        for (let y = top; y <= bot; y += 2) {
+          const x = cx + Math.sin((y - top) / (bot - top) * turns * Math.PI * 2 + ph) * A;
+          y === top ? o.moveTo(x, y) : o.lineTo(x, y);
+        }
+        o.stroke();
+      }
+      for (let k = 0; k <= 16; k++) {
+        const y = top + (bot - top) * k / 16, a = (y - top) / (bot - top) * turns * Math.PI * 2;
+        o.beginPath(); o.moveTo(cx + Math.sin(a) * A, y); o.lineTo(cx + Math.sin(a + Math.PI) * A, y); o.stroke();
+      }
+    }
+  }
+
+  function applyShape(spec, burst) {
+    const r = region(spec);
+    const w = Math.max(10, r.w | 0), h = Math.max(10, r.h | 0);
+    const oc = document.createElement('canvas'); oc.width = w; oc.height = h;
+    const o = oc.getContext('2d', { willReadFrequently: true });
+    draw(o, spec, w, h);
+    const d = o.getImageData(0, 0, w, h).data;
+    let filled = 0;
+    for (let k = 3; k < d.length; k += 16) if (d[k] > 128) filled++;
+    filled *= 4;
+    const g = Math.max(1.4, Math.sqrt(filled / (N * 0.92)));
+    const pts = [];
+    for (let y = 0; y < h; y += g) for (let x = 0; x < w; x += g) {
+      if (d[((y | 0) * w + (x | 0)) * 4 + 3] > 128) pts.push(x + r.x + (Math.random() - .5) * g * .9, y + r.y + (Math.random() - .5) * g * .9);
+    }
+    const cnt = pts.length / 2;
+    for (let k = cnt - 1; k > 0; k--) { // shuffle pairs
+      const j = (Math.random() * (k + 1)) | 0;
+      let a = pts[2 * k]; pts[2 * k] = pts[2 * j]; pts[2 * j] = a;
+      a = pts[2 * k + 1]; pts[2 * k + 1] = pts[2 * j + 1]; pts[2 * j + 1] = a;
+    }
+    for (let i = 0; i < N; i++) {
+      if (i < cnt) { tx[i] = pts[2 * i]; ty[i] = pts[2 * i + 1]; has[i] = 1; } else has[i] = 0;
+      if (burst && !reduce) { const a = Math.random() * 6.283, s = 2 + Math.random() * 7; vx[i] += Math.cos(a) * s; vy[i] += Math.sin(a) * s; }
+    }
+  }
+
+  const flow = (x, y, z) => Math.sin(x * 1.7 + z) * Math.cos(y * 1.3 - z * 0.8) + Math.sin((x + y) * 0.9 + z * 1.3) * 0.5;
+
+  function frame() {
+    t += 0.016;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(5,6,10,0.26)';
+    ctx.fillRect(0, 0, W, H);
+    const mr = W < 700 ? 70 : 120, mr2 = mr * mr;
+    const sp = reduce ? 0.4 : 1;
+    for (let i = 0; i < N; i++) {
+      let x = px[i], y = py[i];
+      if (has[i]) {
+        const jx = Math.sin(t * 1.3 + i) * 0.8, jy = Math.cos(t * 1.1 + i * 1.7) * 0.8;
+        vx[i] = (vx[i] + (tx[i] + jx - x) * 0.018 * sp) * 0.85;
+        vy[i] = (vy[i] + (ty[i] + jy - y) * 0.018 * sp) * 0.85;
+      } else {
+        const a = flow(x * 0.003, y * 0.003, t * 0.25) * Math.PI * 2;
+        vx[i] = (vx[i] + Math.cos(a) * 0.09 * sp + (W / 2 - x) * 0.00002) * 0.975;
+        vy[i] = (vy[i] + Math.sin(a) * 0.09 * sp + (H / 2 - y) * 0.00002) * 0.975;
+      }
+      const dx = x - mouse.x, dy = y - mouse.y, d2 = dx * dx + dy * dy;
+      if (d2 < mr2 && d2 > 0.01) { const dd = Math.sqrt(d2), f = (1 - dd / mr) * 3.2; vx[i] += dx / dd * f; vy[i] += dy / dd * f; }
+      x += vx[i]; y += vy[i];
+      if (!has[i]) { if (x < -20) x = W + 20; else if (x > W + 20) x = -20; if (y < -20) y = H + 20; else if (y > H + 20) y = -20; }
+      px[i] = x; py[i] = y;
+    }
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = 'rgba(124,243,255,0.8)';
+    for (let i = 0; i < N; i++) if (!col[i]) ctx.fillRect(px[i] - 0.8, py[i] - 0.8, has[i] ? 1.7 : 1.3, has[i] ? 1.7 : 1.3);
+    ctx.fillStyle = 'rgba(255,107,139,0.85)';
+    for (let i = 0; i < N; i++) if (col[i]) ctx.fillRect(px[i] - 0.9, py[i] - 0.9, 1.9, 1.9);
+    requestAnimationFrame(frame);
+  }
+
+  // input
+  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  addEventListener('pointerleave', () => { mouse.x = mouse.y = -1e5; });
+  document.addEventListener('mouseleave', () => { mouse.x = mouse.y = -1e5; });
+  addEventListener('touchend', () => { mouse.x = mouse.y = -1e5; });
+  addEventListener('pointerdown', e => {
+    if (e.target.closest('a,button')) return;
+    for (let i = 0; i < N; i++) {
+      const dx = px[i] - e.clientX, dy = py[i] - e.clientY, d = Math.hypot(dx, dy);
+      if (d < 240 && d > 0.1) { const f = (1 - d / 240) * 14; vx[i] += dx / d * f; vy[i] += dy / d * f; }
+    }
+  });
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 150); });
+
+  // section -> shape
+  const navLinks = [...document.querySelectorAll('.links a')];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const s = e.target.dataset.shape;
+    navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+    if (s && s !== shape) { shape = s; applyShape(s, true); }
+  }), { rootMargin: '-45% 0px -45% 0px' });
+  document.querySelectorAll('section[data-shape]').forEach(s => io.observe(s));
+
+  // reveals + counters
+  const fmt = n => n.toLocaleString('en-IN');
+  const rio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in'); rio.unobserve(e.target);
+    e.target.querySelectorAll('[data-count]').forEach(el => {
+      const end = +el.dataset.count, suf = el.dataset.suffix || '', t0 = performance.now();
+      const step = now => { const k = Math.min(1, (now - t0) / 1400), v = Math.round(end * (1 - Math.pow(1 - k, 3)));
+        el.textContent = fmt(v) + suf; if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    });
+  }), { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => rio.observe(el));
+
+  resize();
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => applyShape(shape, false));
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

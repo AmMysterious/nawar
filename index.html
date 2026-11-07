@@ -31,16 +31,21 @@
   }
   /* Nawar's own look (tap the N): metallic black + blood red */
   :root[data-theme=noir]{
-    --bg:#08080a; --fg:#eceef2; --mute:#8d9099; --line:rgba(200,205,214,.14);
-    --cyan:#e8132f; --pink:#e8132f; --panel:rgba(16,16,19,.74);
-    --text:#c9ccd3; --statbg:rgba(12,12,15,.9); --btnbg:rgba(200,205,214,.05); --vig:rgba(0,0,0,.7);
+    --bg:#000; --fg:#f1f2f5; --mute:#8d9099; --line:rgba(255,255,255,.08);
+    --cyan:#ff1a3c; --pink:#ff1a3c; --panel:rgba(3,3,4,.8);
+    --text:#c9ccd3; --statbg:rgba(2,2,3,.94); --btnbg:rgba(255,255,255,.03); --vig:#000;
     color-scheme:dark;
   }
+  /* true black lit by light: a red key light from above, a soft light that follows the pointer, black edges */
   :root[data-theme=noir] .vignette{background:
-    linear-gradient(115deg,rgba(255,255,255,.055),transparent 28%,rgba(255,255,255,.03) 52%,transparent 68%,rgba(255,255,255,.04) 90%),
-    radial-gradient(ellipse at 50% 40%,transparent 40%,var(--vig) 100%)}
-  :root[data-theme=noir] .logo span{color:#e8132f;text-shadow:0 0 12px rgba(232,19,47,.7)}
-  :root[data-theme=noir] .panel{border-color:rgba(200,205,214,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+    radial-gradient(520px circle at var(--mx,50%) var(--my,35%),rgba(255,255,255,.07),transparent 65%),
+    radial-gradient(ellipse 70% 45% at 50% -8%,rgba(255,20,50,.2),transparent 70%),
+    radial-gradient(ellipse at 50% 45%,transparent 45%,#000 100%)}
+  :root[data-theme=noir] .logo span{color:#ff1a3c;text-shadow:0 0 12px rgba(255,26,60,.7)}
+  /* rim light: a bright top edge fading down, like light catching polished metal */
+  :root[data-theme=noir] .panel{border-color:rgba(255,255,255,.07);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.02),0 30px 80px -30px #000;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 120px),var(--panel)}
   :root[data-theme=noir] .stat b{background:linear-gradient(180deg,#fff,#9aa0ab);-webkit-background-clip:text;background-clip:text;color:transparent}
   body,.panel,.stat,.btn,.chip,p{transition:background-color .5s,color .5s,border-color .5s}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -287,7 +292,7 @@
     dark:  { bg: '#05060a', trail: 'rgba(5,6,10,0.26)',     comp: 'lighter',     c1: 'rgba(40,236,255,0.9)',  c2: 'rgba(255,45,115,0.95)', s: 1 },
     // light has no additive glow, so dots are darker, bigger and leave longer trails to read as strongly
     light: { bg: '#f3f1ec', trail: 'rgba(243,241,236,0.25)', comp: 'source-over', c1: 'rgba(0,128,170,0.95)',  c2: 'rgba(226,10,78,0.95)',  s: 1.5 },
-    noir:  { bg: '#08080a', trail: 'rgba(8,8,10,0.26)',     comp: 'lighter',     c1: 'rgba(190,196,206,0.7)', c2: 'rgba(235,14,40,0.95)',  s: 1.1 } };
+    noir:  { bg: '#000', trail: 'rgba(0,0,0,0.24)',         comp: 'lighter',     c1: 'rgba(215,220,230,0.75)', c2: 'rgba(255,22,52,1)',    s: 1.1 } };
   const pal = () => PAL[document.documentElement.dataset.theme] || PAL.dark;
   const setTheme = t => { document.documentElement.dataset.theme = t; try { localStorage.setItem('theme', t); } catch (e) {} };
   document.querySelector('.mode').addEventListener('click', () =>
@@ -386,7 +391,7 @@
     for (let k = 3; k < d.length; k += 16) if (d[k] > 128) filled++;
     filled *= 4;
     // line drawings (heart/ECG, helix, globe) take far fewer dots than the big filled name, or they clot
-    const share = spec.startsWith('text:') ? 0.85 : 0.33;
+    const share = (spec === 'text:NAWAR' || spec === 'text:HELLO') ? 0.85 : 0.33;
     const g = Math.max(1.4, Math.sqrt(filled / (N * share)));
     const pts = [];
     for (let y = 0; y < h; y += g) for (let x = 0; x < w; x += g) {
@@ -441,7 +446,9 @@
   }
 
   // input
-  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  const rootS = document.querySelector('.vignette').style; // set on the vignette only, so moving doesn't restyle the whole page
+  addEventListener('pointermove', e => { mouse.x = e.clientX; mouse.y = e.clientY;
+    rootS.setProperty('--mx', e.clientX + 'px'); rootS.setProperty('--my', e.clientY + 'px'); }, { passive: true });
   addEventListener('pointerleave', () => { mouse.x = mouse.y = -1e5; });
   document.addEventListener('mouseleave', () => { mouse.x = mouse.y = -1e5; });
   addEventListener('touchend', () => { mouse.x = mouse.y = -1e5; });

@@ -272,6 +272,8 @@
     <div class="contact-links">
       <a href="https://www.linkedin.com/in/dr-nawar-%E2%80%8C-2153671ab/" target="_blank" rel="noopener"><span>LinkedIn</span><small>message me &nearr;</small></a>
       <a href="https://ammysterious.github.io/ciel_study/" target="_blank" rel="noopener"><span>Ciel Study</span><small>ammysterious.github.io &nearr;</small></a>
+      <a href="https://www.instagram.com/ciel_study_bot/" target="_blank" rel="noopener"><span>Instagram &middot; Ciel Study</span><small>@ciel_study_bot &nearr;</small></a>
+      <a href="https://www.instagram.com/ultimate_truthseeker/" target="_blank" rel="noopener"><span>Instagram</span><small>@ultimate_truthseeker &nearr;</small></a>
     </div>
   </div>
 </section>
@@ -383,7 +385,9 @@
     let filled = 0;
     for (let k = 3; k < d.length; k += 16) if (d[k] > 128) filled++;
     filled *= 4;
-    const g = Math.max(1.4, Math.sqrt(filled / (N * 0.92)));
+    // line drawings (heart/ECG, helix, globe) take far fewer dots than the big filled name, or they clot
+    const share = spec.startsWith('text:') ? 0.85 : 0.33;
+    const g = Math.max(1.4, Math.sqrt(filled / (N * share)));
     const pts = [];
     for (let y = 0; y < h; y += g) for (let x = 0; x < w; x += g) {
       if (d[((y | 0) * w + (x | 0)) * 4 + 3] > 128) pts.push(x + r.x + (Math.random() - .5) * g * .9, y + r.y + (Math.random() - .5) * g * .9);
@@ -634,20 +638,20 @@ document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click
                 { e: h, f: () => { const r = (s.panel.querySelector('h2') || s.panel).getBoundingClientRect(); return `translate(0,${r.top}px)`; } }];
   }
   function dropGuides(s) { s.guides.forEach(g => { g.e.style.opacity = 0; setTimeout(() => g.e.remove(), 650); }); s.guides = []; }
-  function finishSection(s) {
-    s.state = 'done'; s.tasks.forEach(t => { t.instant = t.state !== 'run'; finishTask(t); }); dropGuides(s);
-  }
   function startSection(s) {
     if (s.state !== 'idle') return;
-    // a section skipped by a fast jump appears at once; one still building keeps going as the reader scrolls
-    sections.forEach(o => { if (o !== s && o.state === 'idle' && sections.indexOf(o) < sections.indexOf(s)) finishSection(o); });
     s.state = 'run'; addGuides(s);
   }
   function schedule() {
     let running = cursors.filter(c => c.busy).length;
     for (const s of sections) {
       if (s.state !== 'run') continue;
-      if (s.tasks.every(t => t.state === 'done')) { s.state = 'done'; setTimeout(() => dropGuides(s), 500); continue; }
+      if (s.tasks.every(t => t.state === 'done')) {
+        s.state = 'done'; setTimeout(() => dropGuides(s), 500);
+        const r = s.sec.getBoundingClientRect(); // finished while scrolled away: the leave event already passed
+        if (r.bottom < -innerHeight * .15 || r.top > innerHeight * 1.15) resetSection(s);
+        continue;
+      }
       for (const t of s.tasks) {
         if (running >= MAXRUN) return;
         if (t.state !== 'wait' || (t.dep && t.dep.state !== 'done')) continue;
@@ -665,6 +669,21 @@ document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) startSection(sections.find(s => s.sec === e.target));
   }), { rootMargin: '0px 0px -12% 0px' }); // start as soon as a section's top is on screen (tall phone sections never hit 20%)
+
+  // once a built section is fully off screen, take it apart again so it rebuilds on the way back
+  function resetSection(s) {
+    s.tasks.forEach(t => {
+      t.state = 'wait'; t.instant = false; t.ui = null;
+      if (t.kind === 'panel') t.el.classList.add('ghost');
+      else if (t.kind === 'rect') { t.el.classList.add('ub'); t.el.querySelectorAll('[data-count]').forEach(fmtCount); }
+      else { t.el.style.minHeight = t.el.offsetHeight + 'px'; t.nodes.forEach(o => o.n.nodeValue = ''); }
+    });
+    s.state = 'idle';
+  }
+  const away = new IntersectionObserver(es => es.forEach(e => {
+    const s = sections.find(o => o.sec === e.target);
+    if (!e.isIntersecting && s.state === 'done') resetSection(s);
+  }), { rootMargin: '15% 0px 15% 0px' });
 
   // ---- frame loop: driven cursors follow their task, idle ones flock around the mouse
   let t = 0;
@@ -690,7 +709,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click
   }
   requestAnimationFrame(loop);
   // short intro orbit, then start building whatever is on screen
-  setTimeout(() => sections.forEach(s => io.observe(s.sec)), 900);
+  setTimeout(() => sections.forEach(s => { io.observe(s.sec); away.observe(s.sec); }), 900);
 })();
 </script>
 </body>

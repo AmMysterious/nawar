@@ -283,7 +283,7 @@
   </div>
 </section>
 </main>
-<footer>&copy; 2026 Dr. Nawar &middot; made with ~3,000 particles</footer>
+<footer>&copy; 2026 Dr. Nawar &middot; made with <span id="pcount">thousands of</span> particles</footer>
 
 <script>
 (() => {
@@ -308,6 +308,7 @@
 
   function alloc() {
     N = W < 700 ? 1900 : (W < 1200 ? 4500 : 7000);
+    document.getElementById('pcount').textContent = N.toLocaleString('en-IN'); // the real count for this screen
     px = new Float32Array(N); py = new Float32Array(N); vx = new Float32Array(N); vy = new Float32Array(N);
     tx = new Float32Array(N); ty = new Float32Array(N); has = new Uint8Array(N); col = new Uint8Array(N);
     for (let i = 0; i < N; i++) {
